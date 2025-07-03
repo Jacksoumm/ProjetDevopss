@@ -47,15 +47,3 @@ resource "local_file" "private_key" {
   filename        = "${path.module}/id_rsa"
   file_permission = "0600"
 }
-
-# 4. Instance EC2 (ex. frontend)
-resource "aws_instance" "frontend" {
-  ami                         = data.aws_ami.amazon_linux_2.id
-  instance_type               = var.frontend_instance_type
-  key_name                    = aws_key_pair.generated_key.key_name
-  associate_public_ip_address = true
-
-  tags = merge(var.project_tags, {
-    Name = "Frontend"
-  })
-}

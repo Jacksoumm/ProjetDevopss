@@ -86,7 +86,8 @@ terraform apply tfplan
 
 # Step 7: Get outputs for Ansible
 print_message "Getting outputs for Ansible..."
-COMBINED_IP=$(terraform output -raw combined_public_ip)
+FRONTEND_IP=$(terraform output -raw frontend_public_ip)
+BACKEND_IP=$(terraform output -raw backend_public_ip)
 
 # Step 8: Wait for instance to be ready
 print_message "Waiting for instance to be ready..."
@@ -97,19 +98,18 @@ print_message "Running Ansible playbooks..."
 cd ../$ANSIBLE_DIR
 
 # Export variables for Ansible
-export combined_ip=$COMBINED_IP
-# For backward compatibility with playbooks
-export frontend_ip=$COMBINED_IP
-export backend_ip=$COMBINED_IP
+export frontend_ip=$FRONTEND_IP
+export backend_ip=$BACKEND_IP
 export ssh_key_path=$SSH_KEY_PATH
 
 # Run backend playbook first
 print_message "Configuring backend server..."
-ansible-playbook backend_playbook.yml
+ansible-playbook -i inventory.yml backend_playbook.yml
 
 # Then run frontend playbook
 print_message "Configuring frontend server..."
-ansible-playbook frontend_playbook.yml
+ansible-playbook -i inventory.yml frontend_playbook.yml
 
 print_message "Deployment completed successfully!"
-print_message "Application URL: http://$COMBINED_IP"
+print_message "Frontend URL: http://$FRONTEND_IP:8080"
+print_message "Backend URL: http://$BACKEND_IP:3000"

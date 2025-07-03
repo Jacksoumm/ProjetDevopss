@@ -1,26 +1,23 @@
 ---
 all:
   children:
-    # Combined server hosting both frontend and backend
-    combined_server:
+    frontend:
       hosts:
-        server:
-          ansible_host: "{{ combined_ip }}"
+        frontend_server:
+          ansible_host: "35.180.185.127"
           ansible_user: ec2-user
-          ansible_ssh_private_key_file: "{{ ssh_key_path }}"
-      # These groups are kept for compatibility with existing playbooks
-      children:
-        frontend:
-          hosts:
-            frontend_server:
-              ansible_host: "{{ combined_ip }}"
-              ansible_user: ec2-user
-              ansible_ssh_private_key_file: "{{ ssh_key_path }}"
-        backend:
-          hosts:
-            backend_server:
-              ansible_host: "{{ combined_ip }}"
-              ansible_user: ec2-user
-              ansible_ssh_private_key_file: "{{ ssh_key_path }}"
+          ansible_ssh_private_key_file: "/home/jack/.ssh/aws_key.pem"
+    backend:
+      hosts:
+        backend_server:
+          ansible_host: "15.237.76.235"
+          ansible_user: ec2-user
+          ansible_ssh_private_key_file: "/home/jack/.ssh/aws_key.pem"
+    database:
+      hosts:
+        database_server:
+          ansible_host: "35.180.223.106"
+          ansible_user: ec2-user
+          ansible_ssh_private_key_file: "/home/jack/.ssh/aws_key.pem"
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

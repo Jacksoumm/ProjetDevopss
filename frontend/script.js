@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const API_URL = 'http://localhost:3000/api/tasks';
+    const API_URL = 'http://15.237.76.235:3000/api/tasks';
     
 
     const taskForm = document.getElementById('task-form');
